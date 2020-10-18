@@ -15,10 +15,16 @@ jobs:
         run: pnpm recursive install
       - name: Change version
         run: pnpm changeset version
-      - name: Commit report
+      - name: Commit versions
         run: |
           git config --global user.name 'Juan Picado'
           git config --global user.email 'juanpicado19@gmail.com'
           git add .
-          git commit -am "release: example"
+          git commit -am "chore: pre-release"
+      - name: Publish pre-release
+        run: pnpm publish --filter ./packages
+        env:
+          NPM_TOKEN: ${{ secrets.REGISTRY_AUTH_TOKEN }}
+      - name: Push release
+        run: |
           git push
